@@ -1,0 +1,32 @@
+{
+  "name": "creact",
+  "version": "0.0.1",
+  "description": "React personal implementation version",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "start": "parcel ./example/index.html --no-cache",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caiyongmin/creact.git"
+  },
+  "keywords": [],
+  "author": "caiyongmin <645589265@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/caiyongmin/creact/issues"
+  },
+  "homepage": "https://github.com/caiyongmin/creact#readme",
+  "dependencies": {
+    "typescript": "~3.4.1"
+  },
+  "devDependencies": {
+    "tslint-config-airbnb": "~5.11.1",
+    "tslint-config-prettier": "~1.18.0",
+    "tslint-react": "~4.0.0"
+  }
+}
