@@ -4,9 +4,10 @@ React personal implementation version.
 
 ## Try
 
-```
+```bash
 yarn
 
+# need install parcel
 npm start
 ```
 
