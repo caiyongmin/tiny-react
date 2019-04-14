@@ -6,12 +6,9 @@ import {
   isFunction
 } from './utils';
 import { setDispatcher } from './../react/index';
+import { ComponentElement, ReactVDOM, ReactElement } from '../../typings/index';
 
-export function diff(dom: any, vdom: any, parent?: any): any {
-  // console.info('vdom', vdom, typeof vdom);
-  if (vdom === 'true') {
-    // debugger;
-  }
+export function diff(dom: ReactVDOM, vdom: ComponentElement, parent?: any): ReactVDOM {
   const replace = parent ? (el: any) => (parent.replaceChild(el, dom) && el) : ((el: any) => el);
   // 不能渲染的 vdom 对象，先转成字符串
   vdom = isUnRenderVDom(vdom) ? '' : vdom;
@@ -26,18 +23,23 @@ export function diff(dom: any, vdom: any, parent?: any): any {
   /* 节点类型相同，做具体的 diff 操作 */
   // 文本节点
   if (isString(vdom)) {
-    return dom.textContent !== vdom ? replace(document.createTextNode(vdom)) : dom;
+    return dom.textContent !== vdom ? replace(document.createTextNode(String(vdom))) : dom;
   }
 
   // DOM 节点
-  if (typeof vdom === 'object' && isString(vdom.type)) {
-    const pool: any = {};
-    [...dom.childNodes].forEach((child, index) => {
+  if (typeof vdom === 'object' && vdom !== null && isString(vdom.type)) {
+    const pool: {
+      [key: string]: ReactVDOM;
+    } = {};
+
+    [...dom.childNodes as any].forEach((child, index) => {
       const key = child.__key || `__index_${index}`;
       pool[key] = child;
     });
     [...vdom.children].forEach((child, index) => {
-      const key = child.props && child.props.key || `__index_${index}`;
+      const key = (typeof child === 'object' && child !== null)
+        && child.props && child.props.key
+        || `__index_${index}`;
       pool[key] ? diff(pool[key], child, dom) : render(child, dom);
       delete pool[key];
     });
@@ -53,7 +55,7 @@ export function diff(dom: any, vdom: any, parent?: any): any {
   }
 
   // Component 组件
-  if (typeof vdom === 'object' && isFunction(vdom.type)) {
+  if (typeof vdom === 'object' && vdom !== null && isFunction(vdom.type)) {
     const instance = dom.__componentInstance;
     instance.props = {
       ...instance.props,
@@ -69,8 +71,8 @@ export function diff(dom: any, vdom: any, parent?: any): any {
   return dom;
 }
 
-function diffAttributes(dom: any, vdom: any) {
-  const attrs = dom.attributes;
+function diffAttributes(dom: ReactVDOM, vdom: ReactElement) {
+  const attrs = dom.attributes as any;
   const props = vdom.props;
 
   for (let attr of attrs) {
@@ -82,6 +84,6 @@ function diffAttributes(dom: any, vdom: any) {
   }
 
   for (let prop in props) {
-    setAttribute(dom, prop, vdom.props[prop]);
+    setAttribute(dom, prop, (vdom.props as any)[prop]);
   }
 }

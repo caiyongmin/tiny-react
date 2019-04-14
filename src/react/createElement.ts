@@ -1,4 +1,10 @@
-function createElement(type: any, props: any, ...children: any) {
+import { ComponentType, ComponentProps, ComponentElement } from './../../typings/index';
+
+function createElement(
+  type: ComponentType,
+  props: ComponentProps,
+  ...children: ComponentElement[]
+) {
   return {
     type,
     props: props || {},

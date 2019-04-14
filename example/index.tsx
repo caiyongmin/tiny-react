@@ -6,7 +6,7 @@ function Welcome({ name }) {
 }
 
 function HooksFunction() {
-  const [toggle, setToggle] = useState(false);
+  const [ toggle, setToggle ] = useState(false);
 
   return (
     <div>

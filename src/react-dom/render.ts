@@ -5,13 +5,14 @@ import {
   isString
 } from './utils';
 import React, { setDispatcher } from './../react/index';
+import { ComponentElement, ComponentProps, Ele, ReactVDOM } from './../../typings/index';
 
-export function render(vdom: any, parent?: any): any {
-  const mount = parent ? (el: any) => parent.appendChild(el) : (el: any) => el;
+export function render(vdom: ComponentElement, parent?: any): ReactVDOM {
+  const mount = parent ? (el: Ele) => parent.appendChild(el) : (el: Ele) => el;
 
   // 渲染数字和字符串
   if (isStrOrNum(vdom)) {
-    return mount(document.createTextNode(vdom));
+    return mount(document.createTextNode(String(vdom)));
   }
 
   // 渲染 true、false、undefined、null
@@ -20,8 +21,8 @@ export function render(vdom: any, parent?: any): any {
   }
 
   // 渲染原生 DOM
-  if (typeof vdom === 'object' && isString(vdom.type)) {
-    const dom = mount(document.createElement(vdom.type));
+  if (typeof vdom === 'object' && vdom !== null && isString(vdom.type)) {
+    const dom = mount(document.createElement(String(vdom.type)));
     for (const child of [...vdom.children]) {
       render(child, dom);
     }
@@ -32,24 +33,26 @@ export function render(vdom: any, parent?: any): any {
   }
 
   // 渲染 React 组件
-  if (typeof vdom === 'object' && isFunction(vdom.type)) {
-    const props = { ...vdom.props, children: vdom.children };
+  if (typeof vdom === 'object' && vdom !== null && isFunction(vdom.type)) {
+    const props: ComponentProps = { ...vdom.props, children: vdom.children };
     const instance = new React.Component(props);
     setDispatcher(instance);
     const dom = render(instance._render(vdom.type), parent);
 
     instance.base = dom;
     instance.parentNode = parent;
-    instance.base.__componentInstance = instance;
-    instance.base.__key = props.key;
-
+    // instance.base 有可能为 null
+    if (instance.base !== null) {
+      instance.base.__componentInstance = instance;
+      instance.base.__key = props.key;
+    }
     return dom;
   }
 
-  throw new Error(`unkown vdom type: ${vdom.type}`);
+  throw new Error(`unkown vdom type: ${String(vdom)}`);
 }
 
-export function setAttribute(dom: any, key: string, value: any) {
+export function setAttribute(dom: ReactVDOM, key: string, value: any) {
   // 事件属性
   if (key.startsWith('on') && isFunction(value)) {
     const eventType = key.slice(2).toLocaleLowerCase();
@@ -61,7 +64,7 @@ export function setAttribute(dom: any, key: string, value: any) {
     dom.addEventListener(eventType, value);
   }
   else if (key === 'checked' || key === 'value' || key === 'className') {
-    dom[key] = value;
+    (dom as any)[key] = value;
   }
   else if (key === 'ref' && typeof value === 'function') {
     value(dom);

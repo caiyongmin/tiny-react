@@ -1,35 +1,42 @@
 import { Hooks } from './hooks';
+import {
+  ReactVDOM,
+  ComponentProps,
+  ComponentState,
+  ComponentHooks,
+  ComponentElement,
+} from '../../typings/index';
 
-// TODO: need better type
-interface Component {
-  isReactComponent: boolean;
-  state: any;
-  props: any;
-  renderVDOM: any;
-  base: any;
-  hooks: any;
-  parentNode: any;
-}
+class Component<P = {}, S = {}> {
+  private isReactComponent: boolean;
+  public hooks: Hooks;
+  public __hooks: ComponentHooks;
+  public base: null | ReactVDOM;
+  public parentNode: null | ReactVDOM;
+  public renderVDOM: (props: ComponentProps<P>) => ComponentElement;
 
-class Component {
-  constructor(props: any) {
-    this.isReactComponent = true;
+  public props: ComponentProps<P>;
+  public state: ComponentState<S>;
 
-    this.state = null;
+  constructor(props: P) {
+    this.state = {};
     this.props = props || {};
-    this.renderVDOM = null;
-    this.base = null;
+
+    this.isReactComponent = true;
     this.hooks = new Hooks(this);
+    this.__hooks = null;
+    this.base = null;
     this.parentNode = null;
+    this.renderVDOM = () => null;
   }
 
-  public _render(renderVDOM: any) {
+  public _render(renderVDOM: any): ComponentElement {
     this.renderVDOM = renderVDOM;
     const vdom = this.renderVDOM(this.props);
     return vdom;
   }
 
-  public _update() {
+  public _update(): ComponentElement {
     const vdom = this.renderVDOM(this.props);
     return vdom;
   }
