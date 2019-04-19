@@ -36,7 +36,8 @@ export type ComponentState<S = {}> = {} | Readonly<S>;
 export type ComponentType = string | Component;
 
 export type ComponentHooks = null | {
-  _list: any[]
+  _list: any[],
+  _pendingEffects: any[],
 };
 
 export type HookStateValue = [any, (action: any) => void];
@@ -44,4 +45,7 @@ export type HookStateValue = [any, (action: any) => void];
 export type HookState = {
   __componentInstance: Component;
   __value: HookStateValue;
+  _effectArgs: any[];
+  _effectCallback: () => any;
+  _cleanup: () => any;
 };

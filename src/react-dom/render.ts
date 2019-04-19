@@ -34,18 +34,33 @@ export function render(vdom: ComponentElement, parent?: any): ReactVDOM {
 
   // 渲染 React 组件
   if (typeof vdom === 'object' && vdom !== null && isFunction(vdom.type)) {
+    const type = vdom.type;
     const props: ComponentProps = { ...vdom.props, children: vdom.children };
-    const instance = new React.Component(props);
+    const isClassComponent: boolean = !!(type as any).prototype.render;
+    const instance = isClassComponent
+      ? new (type as any)(props)
+      : new React.Component(props);
+
+    const renderVDOM = isClassComponent
+      ? (type as any).prototype.render
+      : type;
+
     setDispatcher(instance);
-    const dom = render(instance._render(vdom.type), parent);
+
+    if (instance && typeof instance.componentWillMount === 'function') {
+      instance.componentWillMount();
+    }
+
+    const dom = render(instance._render(renderVDOM), parent);
+
+    if (instance && typeof instance.componentDidMount === 'function') {
+      instance.componentDidMount();
+    }
 
     instance.base = dom;
     instance.parentNode = parent;
-    // instance.base 有可能为 null
-    if (instance.base !== null) {
-      instance.base.__componentInstance = instance;
-      instance.base.__key = props.key;
-    }
+    instance.base.__componentInstance = instance;
+    instance.base.__key = props.key;
     return dom;
   }
 

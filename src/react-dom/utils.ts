@@ -20,7 +20,7 @@ export function isString(val: any): boolean {
   return typeof val === 'string';
 }
 
-export function isSameNodeType(dom: any, vdom: ComponentElement) {
+export function isSameNodeType(dom: any, vdom: ComponentElement): boolean {
   // 文本节点
   if (typeof vdom === 'string' || typeof vdom === 'number') {
     return dom.nodeType === 3;
@@ -37,4 +37,34 @@ export function isSameNodeType(dom: any, vdom: ComponentElement) {
   }
 
   return false;
+}
+
+export function shallowCompareObject(
+  obj: { [ key: string ]: any },
+  compareObj: { [ key: string ]: any },
+) {
+  if (!isObject(obj) || !isObject(compareObj)) {
+    return false;
+  }
+
+  const objKeys = Object.keys(obj);
+  const compareObjKeys = Object.keys(compareObj);
+
+  if (objKeys.length !== compareObjKeys.length) {
+    return false;
+  }
+
+  let index = objKeys.length;
+  while (index--) {
+    const key = objKeys[index];
+
+    if (
+      !Object.hasOwnProperty.call(compareObj, key)
+      || compareObj[key] !== obj[key]
+    ) {
+      return false;
+    }
+  }
+
+  return true;
 }

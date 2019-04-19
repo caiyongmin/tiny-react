@@ -21,8 +21,6 @@ npm start
 - [ ] Support render Class Component.
 - [ ] Support Class Component setState and lifecycle api.
 - [ ] Support useEffect hook or other hooks api.
-- [ ] Add test cases.
-- [ ] Publish package.
 
 ## Refs
 

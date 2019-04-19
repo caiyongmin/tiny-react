@@ -3,6 +3,7 @@ import ReactDOM from './../react-dom/index';
 import { HookState, HookStateValue } from './../../typings/index';
 
 let dispatcher: Hooks;
+let afterPaintEffects: Component[] = [];
 
 export class Hooks {
   private currentIndex: number = 0;
@@ -14,6 +15,19 @@ export class Hooks {
 
   public useState(initialState: any): HookStateValue {
     return this.useReducer(invokeOrReturn, initialState);
+  }
+
+  public useEffect(callback: () => any, args: any[]): void {
+    const hookState = this.getHookState(this.currentIndex++);
+
+    if (argsChanged(hookState._effectArgs, args)) {
+      hookState._effectCallback = callback;
+      hookState._effectArgs = args;
+      if (this.currentInstance !== null && this.currentInstance.__hooks !== null) {
+        this.currentInstance.__hooks._pendingEffects.push(hookState);
+        afterPoint(this.currentInstance);
+      }
+    }
   }
 
   private useReducer(reducer: any, initialState: any, init?: (initialState: any) => any): HookStateValue {
@@ -44,7 +58,7 @@ export class Hooks {
 
   private getHookState(index: number): HookState {
     const hooks = this.currentInstance.__hooks
-      || (this.currentInstance.__hooks = { _list: [] });
+      || (this.currentInstance.__hooks = { _list: [], _pendingEffects: [] });
 
     if (index >= hooks._list.length) {
       hooks._list.push({});
@@ -58,10 +72,54 @@ function invokeOrReturn(arg: any, f: any) {
   return typeof f === 'function' ? f(arg) : f;
 }
 
+function argsChanged(oldArgs: any[], newArgs: any) {
+  return !oldArgs || newArgs.some((arg: any, index: number) => arg !== oldArgs[index]);
+}
+
+export function invokeCleanup(effect: HookState) {
+  if (effect._cleanup) {
+    effect._cleanup();
+  }
+}
+
+export function invokeEffect(effect: HookState) {
+  const cleanup = effect._effectCallback();
+  if (typeof cleanup === 'function') {
+    effect._cleanup = cleanup;
+  }
+}
+
+function handleEffects(effects: HookState[]): any[] {
+  effects.forEach(invokeCleanup);
+  effects.forEach(invokeEffect);
+  return [];
+}
+
+function flushAfterPaintEffects() {
+  afterPaintEffects.forEach((component: Component) => {
+    component._afterPaintQueued = false;
+    if (component !== null && component.__hooks !== null) {
+      component.__hooks._pendingEffects = handleEffects(component.__hooks._pendingEffects);
+    }
+  });
+  afterPaintEffects = [];
+}
+
+function afterPoint(component: Component) {
+  if (!component._afterPaintQueued && afterPaintEffects.push(component) === 1) {
+    component._afterPaintQueued = true;
+    window.requestAnimationFrame(flushAfterPaintEffects);
+  }
+}
+
 export function setDispatcher(componentInstance: Component) {
   dispatcher = componentInstance.hooks;
 }
 
 export function useState(initialState: any): HookStateValue {
   return dispatcher.useState(initialState);
+}
+
+export function useEffect(callback: () => any, args: any[]): void {
+  return dispatcher.useEffect(callback, args);
 }
