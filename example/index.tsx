@@ -12,7 +12,7 @@ function Event({ toggle }) {
     }
   }, [new Date()]);
 
-  return <div>Event</div>
+  return <div>Event: {`${toggle}`}</div>
 }
 
 function Log({ toggle }) {
@@ -22,12 +22,12 @@ function Log({ toggle }) {
     }
   }, [new Date()]);
 
-  return <div>Log</div>;
+  return <div>Log: {`${toggle}`}</div>;
 }
 
 function HooksFunction() {
   const [ toggle, setToggle ] = useState(false);
-  const [ toggle1, setToggle1 ] = useState(true);
+  const [ toggle1, setToggle1 ] = useState(new Date());
   const [ toggle2, setToggle2 ] = useState(false);
 
   return (
@@ -35,7 +35,7 @@ function HooksFunction() {
       <h1>Title...</h1>
       <Welcome name="tata" />
       {
-        toggle ? <Event toggle={toggle} /> : <Log toggle={toggle} />
+        toggle ? <Event toggle={toggle1} /> : <Log toggle={toggle1} />
       }
       <br/>
       <p>toggle: {`${toggle}`}</p>
@@ -43,7 +43,7 @@ function HooksFunction() {
       <p>toggle2: {`${toggle2}`}</p>
       <button onClick={() => {
         setToggle(!toggle);
-        setToggle1(!toggle1);
+        setToggle1(new Date());
         setToggle2(!toggle2);
       }}>button</button>
     </div>
@@ -67,6 +67,10 @@ class Todo extends React.Component<any, { x: number }> {
     console.info('componentDidMount');
   }
 
+  componentWillReceiveProps() {
+    console.info('componentWillReceiveProps');
+  }
+
   componentWillUpdate() {
     console.info('componentWillUpdate');
   }
@@ -76,7 +80,9 @@ class Todo extends React.Component<any, { x: number }> {
   }
 
   onClick = () => {
-    this.setState({ x: this.state.x + 1 });
+    for (let i = 0; i < 100; i++) {
+      this.setState({ x: this.state.x + 1 });
+    }
   }
 
   render() {
@@ -90,6 +96,11 @@ class Todo extends React.Component<any, { x: number }> {
     );
   }
 }
+
+// ReactDOM.render(
+//   <HooksFunction />,
+//   document.getElementById('root')
+// );
 
 ReactDOM.render(
   <Todo />,

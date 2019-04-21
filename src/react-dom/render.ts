@@ -4,8 +4,8 @@ import {
   isFunction,
   isString
 } from './utils';
-import React, { setDispatcher } from './../react/index';
-import { ComponentElement, ComponentProps, Ele, ReactVDOM } from './../../typings/index';
+import React from './../react/index';
+import { ComponentElement, Ele, ReactVDOM } from './../../typings/index';
 
 export function render(vdom: ComponentElement, parent?: any): ReactVDOM {
   const mount = parent ? (el: Ele) => parent.appendChild(el) : (el: Ele) => el;
@@ -35,33 +35,11 @@ export function render(vdom: ComponentElement, parent?: any): ReactVDOM {
   // 渲染 React 组件
   if (typeof vdom === 'object' && vdom !== null && isFunction(vdom.type)) {
     const type = vdom.type;
-    const props: ComponentProps = { ...vdom.props, children: vdom.children };
     const isClassComponent: boolean = !!(type as any).prototype.render;
-    const instance = isClassComponent
-      ? new (type as any)(props)
-      : new React.Component(props);
+    const instance = isClassComponent ? new (type as any)(vdom.props) : new React.Component(vdom.props);
+    const renderVDOM = isClassComponent ? (type as any).prototype.render : type;
 
-    const renderVDOM = isClassComponent
-      ? (type as any).prototype.render
-      : type;
-
-    setDispatcher(instance);
-
-    if (instance && typeof instance.componentWillMount === 'function') {
-      instance.componentWillMount();
-    }
-
-    const dom = render(instance._render(renderVDOM), parent);
-
-    if (instance && typeof instance.componentDidMount === 'function') {
-      instance.componentDidMount();
-    }
-
-    instance.base = dom;
-    instance.parentNode = parent;
-    instance.base.__componentInstance = instance;
-    instance.base.__key = props.key;
-    return dom;
+    return instance._render(renderVDOM, vdom, parent);
   }
 
   throw new Error(`unkown vdom type: ${String(vdom)}`);
