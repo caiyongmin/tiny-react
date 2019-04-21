@@ -7,16 +7,16 @@ import {
   ComponentProps,
   ComponentState,
   ComponentHooks,
-  ComponentElement,
   ReactElement,
+  ReactVNode,
 } from '../../typings/index';
 
 class Component<P = {}, S = {}> {
   private isReactComponent: boolean;
   public hooks: Hooks;
   public __hooks: ComponentHooks;
-  public base: null | ReactVDOM;
-  public parentNode: null | ReactVDOM;
+  public base: ReactVNode;
+  public parentNode: ReactVNode;
   public renderVDOM: (props: ComponentProps<P>) => ReactElement;
   public _afterPaintQueued: boolean;
 
@@ -44,16 +44,21 @@ class Component<P = {}, S = {}> {
     this._afterPaintQueued = false;
   }
 
-  public _render(renderVDOM: any, vdom: any, parent?: any): any {
-    if (this && typeof this.componentWillMount === 'function') {
+  public _render(
+    renderVDOM: (props: ComponentProps<P>) => ReactElement,
+    vdom: ReactElement,
+    parent: ReactVDOM
+  ): ReactVNode {
+    if (typeof this.componentWillMount === 'function') {
       this.componentWillMount();
     }
 
+    // 记录下 renderVDOM 函数
     this.renderVDOM = renderVDOM;
     setDispatcher(this);
     const dom = ReactDOM.render(this.renderVDOM(this.props), parent);
 
-    if (this && typeof this.componentDidMount === 'function') {
+    if (typeof this.componentDidMount === 'function') {
       this.componentDidMount();
     }
 
@@ -65,12 +70,16 @@ class Component<P = {}, S = {}> {
     return dom;
   }
 
-  public _update(isUpdateState?: boolean): ReactElement {
-    const dom = this.base as any;
+  public _update(isUpdateState?: boolean): ReactVNode {
+    if (this.base === null) {
+      return null;
+    }
+
+    const dom = this.base;
     this.nextProps = Object.assign({}, dom.__componentInstance.props, this.props);
     this.nextState = this.nextState  || Object.assign({}, this.state);
 
-    // 是更新 state 更新渲染时，不执行 componentWillReceiveProps 生命周期方法
+    // 如果是更新 state 更新渲染时，不执行 componentWillReceiveProps 生命周期方法
     if (!isUpdateState) {
       // 调用组件的 componentWillReceiveProps 生命周期方法
       if (typeof this.componentWillReceiveProps === 'function') {
@@ -100,7 +109,7 @@ class Component<P = {}, S = {}> {
     this.state = Object.assign({}, this.nextState);
     setDispatcher(this);
     const vdom = this.renderVDOM(this.props);
-    const result = ReactDOM.diff(dom, vdom, this.parentNode) as any;
+    const result = ReactDOM.diff(dom, vdom, this.parentNode);
 
     // 组件更新完，执行组件的 componentDidUpdate 生命周期方法
     if (typeof this.componentDidUpdate === 'function') {
@@ -110,7 +119,7 @@ class Component<P = {}, S = {}> {
     return result;
   }
 
-  // 调用 useEffect Hook 返回的 cleanup 方法
+  // 调用 useEffect hook 返回的 cleanup 方法
   public cleanup() {
     if (this.__hooks && this.__hooks._list && this.__hooks._list.length) {
       this.__hooks._list.forEach(invokeCleanup);
@@ -118,24 +127,24 @@ class Component<P = {}, S = {}> {
     }
   }
 
-  public setState(update: any) {
-    setState(update, this);
+  public setState(stateUpdater: any) {
+    setState(stateUpdater, this);
   }
 
-  public componentWillMount() {}
+  public componentWillMount?() {}
 
-  public componentDidMount() {}
+  public componentDidMount?() {}
 
-  public shouldComponentUpdate(nextProps: any, nextState: any) {
+  public shouldComponentUpdate?(nextProps: any, nextState: any) {
     return !shallowCompareObject(nextProps, this.props)
       || !shallowCompareObject(nextState, this.state);
   }
 
-  public componentWillReceiveProps(nextProps: ComponentProps<P>) {}
+  public componentWillReceiveProps?(nextProps: ComponentProps<P>) {}
 
-  public componentWillUpdate(nextProps: ComponentProps<P>, nextState: ComponentState<S>) {}
+  public componentWillUpdate?(nextProps: ComponentProps<P>, nextState: ComponentState<S>) {}
 
-  public componentDidUpdate(prevProps: ComponentProps<P>, prevState: ComponentState<S>) {}
+  public componentDidUpdate?(prevProps: ComponentProps<P>, prevState: ComponentState<S>) {}
 }
 
 export default Component;

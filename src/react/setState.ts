@@ -1,15 +1,13 @@
-import ReactDOM from '../react-dom/index';
-
 const setStateQueue: any[] = [];
 const renderQueue: any[] = [];
 
-export default function setState(update: any, component: any) {
+export default function setState(stateUpdater: any, component: any) {
   if (setStateQueue.length === 0) {
     defer(flush);
   }
 
   setStateQueue.push({
-    update,
+    stateUpdater,
     component
   });
 
@@ -18,24 +16,23 @@ export default function setState(update: any, component: any) {
   }
 }
 
-function defer(fn: () => void) {
-  return window.requestAnimationFrame(fn);
+function defer(fn: () => void): void {
+  window.requestAnimationFrame(fn);
 }
 
-function flush() {
+function flush(): void {
     let item, component;
 
-    while(item = setStateQueue.shift()) {
-      const { update, component } = item;
-
+    while (item = setStateQueue.shift()) {
+      const { stateUpdater, component } = item;
       component.prevState = Object.assign({}, component.state);
-      const updateState = typeof update === 'function'
-        ? update(component.prevState, component.props)
-        : update;
+      const updateState = typeof stateUpdater === 'function'
+        ? stateUpdater(component.prevState, component.props)
+        : stateUpdater;
       component.nextState = Object.assign({}, component.state, updateState);
     }
 
-    while(component = renderQueue.shift()) {
+    while (component = renderQueue.shift()) {
       const isUpdateState: boolean = true;
       component._update(isUpdateState);
     }

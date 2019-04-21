@@ -5,10 +5,10 @@ import {
   isString
 } from './utils';
 import React from './../react/index';
-import { ComponentElement, Ele, ReactVDOM } from './../../typings/index';
+import { ComponentElement, ReactVDOM } from './../../typings/index';
 
-export function render(vdom: ComponentElement, parent?: any): ReactVDOM {
-  const mount = parent ? (el: Ele) => parent.appendChild(el) : (el: Ele) => el;
+export function render(vdom: ComponentElement, parent?: ReactVDOM): ReactVDOM {
+  const mount = parent ? (el: any) => parent.appendChild(el) : (el: any) => el;
 
   // 渲染数字和字符串
   if (isStrOrNum(vdom)) {
@@ -36,8 +36,12 @@ export function render(vdom: ComponentElement, parent?: any): ReactVDOM {
   if (typeof vdom === 'object' && vdom !== null && isFunction(vdom.type)) {
     const type = vdom.type;
     const isClassComponent: boolean = !!(type as any).prototype.render;
-    const instance = isClassComponent ? new (type as any)(vdom.props) : new React.Component(vdom.props);
-    const renderVDOM = isClassComponent ? (type as any).prototype.render : type;
+    const instance = isClassComponent
+      ? new (type as any)(vdom.props)
+      : new React.Component(vdom.props);
+    const renderVDOM = isClassComponent
+      ? (type as any).prototype.render
+      : type;
 
     return instance._render(renderVDOM, vdom, parent);
   }

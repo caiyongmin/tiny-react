@@ -10,14 +10,14 @@ export interface ReactVDOM extends HTMLElement {
 
 export type Ele = Text | HTMLElement;
 
-export type ReactNode = null | ReactVDOM;
+export type ReactVNode = null | ReactVDOM;
 
 export type Primitive = null | undefined | string | number | boolean | symbol;
 
 export type ReactElement = {
-  type: ComponentType,
+  type: ElementType,
   props: ComponentProps,
-  children: ComponentElement[]
+  children: ReactElement[]
 };
 
 export type ComponentElement = Primitive | ReactElement;
@@ -33,7 +33,7 @@ export type ComponentProps<P = Props> = Props | Readonly<P>;
 
 export type ComponentState<S = {}> = {} | Readonly<S>;
 
-export type ComponentType = string | Component;
+export type ElementType = string | Component;
 
 export type ComponentHooks = null | {
   _list: any[],

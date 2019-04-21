@@ -41,12 +41,12 @@ function diffNativeDom(dom: any, vdom: any) {
     [key: string]: ReactVDOM;
   } = {};
 
-  [...dom.childNodes as any].forEach((child, index) => {
+  [...dom.childNodes].forEach((child, index) => {
     const key = child.__key || `__index_${index}`;
     pool[key] = child;
   });
 
-  [...vdom.children as any].forEach((child, index) => {
+  [...vdom.children].forEach((child, index) => {
     const key = child.props && child.props.key || `__index_${index}`;
     pool[key] ? diff(pool[key], child, dom) : render(child, dom);
     delete pool[key];

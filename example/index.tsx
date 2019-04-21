@@ -32,7 +32,6 @@ function HooksFunction() {
 
   return (
     <div>
-      <h1>Title...</h1>
       <Welcome name="tata" />
       {
         toggle ? <Event toggle={toggle1} /> : <Log toggle={toggle1} />
@@ -81,12 +80,13 @@ class Todo extends React.Component<any, { x: number }> {
 
   onClick = () => {
     for (let i = 0; i < 100; i++) {
-      this.setState({ x: this.state.x + 1 });
+      const { x } = this.state as any;
+      this.setState({ x: x + 1 });
     }
   }
 
   render() {
-    const { x } = this.state;
+    const { x } = this.state as any;
 
     return (
       <div>
@@ -97,12 +97,12 @@ class Todo extends React.Component<any, { x: number }> {
   }
 }
 
-// ReactDOM.render(
-//   <HooksFunction />,
-//   document.getElementById('root')
-// );
-
 ReactDOM.render(
-  <Todo />,
+  <div>
+    <h1>Example</h1>
+    <HooksFunction />
+    <hr/>
+    <Todo />
+  </div>,
   document.getElementById('root')
 );

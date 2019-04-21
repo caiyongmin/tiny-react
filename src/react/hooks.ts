@@ -23,10 +23,11 @@ export class Hooks {
     if (argsChanged(hookState._effectArgs, args)) {
       hookState._effectCallback = callback;
       hookState._effectArgs = args;
-      if (this.currentInstance !== null && this.currentInstance.__hooks !== null) {
+
+      if (this.currentInstance.__hooks !== null) {
         this.currentInstance.__hooks._pendingEffects.push(hookState);
-        afterPoint(this.currentInstance);
       }
+      afterPoint(this.currentInstance);
     }
   }
 
@@ -45,9 +46,11 @@ export class Hooks {
             setDispatcher(hookState.__componentInstance);  // 重新渲染之前，设置当前的 dispatcher
             // 重新渲染组件
             const { base, props, renderVDOM, parentNode } = hookState.__componentInstance;
-            const newVDOM = renderVDOM(props);
-            ReactDOM.diff(base as any, newVDOM, parentNode as any);
+            if (base !== null) {
+              ReactDOM.diff(base, renderVDOM(props), parentNode);
+            }
           }
+
           return nextValue;
         }
       ];
@@ -72,7 +75,7 @@ function invokeOrReturn(arg: any, f: any) {
   return typeof f === 'function' ? f(arg) : f;
 }
 
-function argsChanged(oldArgs: any[], newArgs: any) {
+function argsChanged(oldArgs: any[], newArgs: any[]) {
   return !oldArgs || newArgs.some((arg: any, index: number) => arg !== oldArgs[index]);
 }
 
