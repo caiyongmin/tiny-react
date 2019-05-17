@@ -18,9 +18,10 @@ npm start
 
 ## Todos
 
-- [ ] Support render Class Component.
-- [ ] Support Class Component setState and lifecycle api.
+- [x] Support render Class Component.
+- [x] Support Class Component setState and lifecycle api.
 - [ ] Support useEffect hook or other hooks api.
+  - [x] Temporary only support useEffect hooks api.
 
 ## Refs
 
