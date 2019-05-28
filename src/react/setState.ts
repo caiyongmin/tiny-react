@@ -21,19 +21,19 @@ function defer(fn: () => void): void {
 }
 
 function flush(): void {
-    let item, component;
+  let item, component;
 
-    while (item = setStateQueue.shift()) {
-      const { stateUpdater, component } = item;
-      component.prevState = Object.assign({}, component.state);
-      const updateState = typeof stateUpdater === 'function'
-        ? stateUpdater(component.prevState, component.props)
-        : stateUpdater;
-      component.nextState = Object.assign({}, component.state, updateState);
-    }
+  while (item = setStateQueue.shift()) {
+    const { stateUpdater, component } = item;
+    component.prevState = Object.assign({}, component.state);
+    const updateState = typeof stateUpdater === 'function'
+      ? stateUpdater(component.prevState, component.props)
+      : stateUpdater;
+    component.nextState = Object.assign({}, component.state, updateState);
+  }
 
-    while (component = renderQueue.shift()) {
-      const isUpdateState: boolean = true;
-      component._update(isUpdateState);
-    }
+  while (component = renderQueue.shift()) {
+    const isUpdateState: boolean = true;
+    component._update(isUpdateState);
+  }
 }

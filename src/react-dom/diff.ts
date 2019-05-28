@@ -11,6 +11,8 @@ export function diff(dom: ReactVDOM, vdom: ComponentElement, parent?: any): any 
   const replace = parent ? (el: any) => (parent.replaceChild(el, dom) && el) : ((el: any) => el);
   // 不能渲染的 vdom 对象，先转成空字符串
   vdom = isUnRenderVDom(vdom) ? '' : vdom;
+  // 把数字先转成字符串
+  vdom = typeof vdom === 'number' ? String(vdom) : vdom;
 
   // 节点类型不同，节点重新渲染
   if (!isSameNodeType(dom, vdom)) {

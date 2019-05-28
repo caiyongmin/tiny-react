@@ -1,4 +1,4 @@
-import Component from './../src/react/component';
+import Component from '../src/react/component';
 
 export interface ReactVDOM extends HTMLElement {
   __componentInstance?: any;
@@ -29,9 +29,9 @@ export type Props = {
   children?: ComponentElement[]
 };
 
-export type ComponentProps<P = Props> = Props | Readonly<P>;
+export type ComponentProps<P = Props> = Readonly<Props & P>;
 
-export type ComponentState<S = {}> = {} | Readonly<S>;
+export type ComponentState<S = {}> = Readonly<S>;
 
 export type ElementType = string | Component;
 

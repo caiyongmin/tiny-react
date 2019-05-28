@@ -1,20 +1,30 @@
 {
-  "name": "creact",
-  "version": "0.0.1",
+  "name": "@caiym/react",
+  "version": "0.1.10",
   "description": "React personal implementation version",
-  "main": "index.js",
+  "main": "dist/index.js",
   "directories": {
     "example": "example"
   },
   "scripts": {
     "start": "parcel ./example/index.html --no-cache",
+    "build": "NODE_ENV=production parcel build ./src/index.ts --no-cache",
+    "pub": "rm -rf dist && tsc && npm publish --access public",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "dist",
+    "typings",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/caiyongmin/creact.git"
   },
-  "keywords": [],
+  "keywords": [
+    "react",
+    "typescript"
+  ],
   "author": "caiyongmin <645589265@qq.com>",
   "license": "MIT",
   "bugs": {
@@ -22,11 +32,12 @@
   },
   "homepage": "https://github.com/caiyongmin/creact#readme",
   "dependencies": {
-    "typescript": "~3.4.1"
   },
   "devDependencies": {
     "tslint-config-airbnb": "~5.11.1",
     "tslint-config-prettier": "~1.18.0",
-    "tslint-react": "~4.0.0"
+    "tslint-react": "~4.0.0",
+    "rimraf": "^2.6.3",
+    "typescript": "~3.4.1"
   }
 }

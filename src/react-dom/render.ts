@@ -5,7 +5,7 @@ import {
   isString
 } from './utils';
 import React from './../react/index';
-import { ComponentElement, ReactVDOM } from './../../typings/index';
+import { ComponentElement, ReactVDOM } from '../../typings/index';
 
 export function render(vdom: ComponentElement, parent?: ReactVDOM): ReactVDOM {
   const mount = parent ? (el: any) => parent.appendChild(el) : (el: any) => el;
@@ -44,6 +44,11 @@ export function render(vdom: ComponentElement, parent?: ReactVDOM): ReactVDOM {
       : type;
 
     return instance._render(renderVDOM, vdom, parent);
+  }
+
+  // 渲染数组子节点
+  if (Array.isArray(vdom)) {
+    return vdom.map(item => render(item, parent)) as any;
   }
 
   throw new Error(`unkown vdom type: ${String(vdom)}`);

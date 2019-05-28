@@ -1,6 +1,6 @@
 import Component from './component';
 import ReactDOM from './../react-dom/index';
-import { HookState, HookStateValue } from './../../typings/index';
+import { HookState, HookStateValue } from '../../typings/index';
 
 let dispatcher: Hooks;
 let afterPaintEffects: Component[] = [];

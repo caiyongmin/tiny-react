@@ -28,7 +28,7 @@ class Component<P = {}, S = {}> {
   public prevState: null | ComponentState<S>;
 
   constructor(props: ComponentProps<P>) {
-    this.state = {};
+    this.state = {} as ComponentState<S>;
     this.nextState = null;
     this.prevState = null;
     this.props = props || {};
@@ -36,7 +36,7 @@ class Component<P = {}, S = {}> {
     this.prevProps = this.props;
 
     this.isReactComponent = true;
-    this.hooks = new Hooks(this);
+    this.hooks = new Hooks(this as any);
     this.__hooks = null;
     this.base = null;
     this.parentNode = null;
@@ -55,7 +55,7 @@ class Component<P = {}, S = {}> {
 
     // 记录下 renderVDOM 函数
     this.renderVDOM = renderVDOM;
-    setDispatcher(this);
+    this.setDispatcher();
     const dom = ReactDOM.render(this.renderVDOM(this.props), parent);
 
     if (typeof this.componentDidMount === 'function') {
@@ -107,7 +107,7 @@ class Component<P = {}, S = {}> {
     // 设置组件新的 props 和 state 的值，开始更新渲染
     this.props = Object.assign({}, this.nextProps);
     this.state = Object.assign({}, this.nextState);
-    setDispatcher(this);
+    this.setDispatcher();
     const vdom = this.renderVDOM(this.props);
     const result = ReactDOM.diff(dom, vdom, this.parentNode);
 
@@ -117,6 +117,10 @@ class Component<P = {}, S = {}> {
     }
 
     return result;
+  }
+
+  private setDispatcher() {
+    setDispatcher(this as any);
   }
 
   // 调用 useEffect hook 返回的 cleanup 方法

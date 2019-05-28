@@ -1,4 +1,4 @@
-import { ElementType, ComponentProps, ReactElement } from './../../typings/index';
+import { ElementType, ComponentProps, ReactElement } from '../../typings/index';
 
 function createElement(
   type: ElementType,
