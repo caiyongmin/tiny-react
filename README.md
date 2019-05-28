@@ -158,6 +158,28 @@ class TodoList extends React.Component<TodoListProps> {
 export default TodoApp;
 ```
 
+### Render
+
+```tsx
+import { React, ReactDOM } from "@caiym/react";
+import FunctionComponent from "./FunctionComponent";
+import ClassComponent from "./ClassComponent";
+
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <FunctionComponent />
+        <hr />
+        <ClassComponent title="React Todo" />
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById("root"));
+```
+
 ## Refs
 
 Thank you here!
