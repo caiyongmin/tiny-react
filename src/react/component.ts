@@ -36,7 +36,7 @@ class Component<P = {}, S = {}> {
     this.prevProps = this.props;
 
     this.isReactComponent = true;
-    this.hooks = new Hooks(this as any);
+    this.hooks = new Hooks(this as Component<any, any>);
     this.__hooks = null;
     this.base = null;
     this.parentNode = null;
@@ -120,7 +120,7 @@ class Component<P = {}, S = {}> {
   }
 
   private setDispatcher() {
-    setDispatcher(this as any);
+    setDispatcher(this as Component<any, any>);
   }
 
   // 调用 useEffect hook 返回的 cleanup 方法
