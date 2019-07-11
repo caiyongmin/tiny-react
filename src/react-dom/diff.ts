@@ -5,10 +5,10 @@ import {
   isString,
   isFunction
 } from './utils';
-import { ComponentElement, ReactVDOM, ReactElement } from '../../typings/index';
+import { VNode, ReactHtmlElement, ReactElement, MountElement } from '../../typings/index';
 
-export function diff(dom: ReactVDOM, vdom: ComponentElement, parent?: any): any {
-  const replace = parent ? (el: any) => (parent.replaceChild(el, dom) && el) : ((el: any) => el);
+export function diff(dom: ReactHtmlElement, vdom: VNode, parent?: ReactHtmlElement | null): ReactHtmlElement {
+  const replace = parent ? (el: MountElement) => parent.replaceChild(el, dom) : ((el: any) => el);
   // 不能渲染的 vdom 对象，先转成空字符串
   vdom = isUnRenderVDom(vdom) ? '' : vdom;
   // 把数字先转成字符串
@@ -36,11 +36,13 @@ export function diff(dom: ReactVDOM, vdom: ComponentElement, parent?: any): any 
     const instance = dom.__componentInstance;
     return instance._update();
   }
+
+  throw new Error(`unkown vdom type: ${String(vdom)}`);
 }
 
-function diffNativeDom(dom: any, vdom: any) {
+function diffNativeDom(dom: any, vdom: ReactElement) {
   const pool: {
-    [key: string]: ReactVDOM;
+    [key: string]: ReactHtmlElement;
   } = {};
 
   [...dom.childNodes].forEach((child, index) => {
@@ -68,7 +70,7 @@ function diffNativeDom(dom: any, vdom: any) {
   return dom;
 }
 
-function diffAttributes(dom: ReactVDOM, vdom: ReactElement) {
+function diffAttributes(dom: ReactHtmlElement, vdom: ReactElement) {
   const attrs = dom.attributes as any;
   const props = vdom.props;
 

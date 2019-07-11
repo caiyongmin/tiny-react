@@ -1,7 +1,7 @@
 import { React } from './../src';
 
 type ItemType = {
-  id: string;
+  id: number;
   text: string;
 };
 
@@ -24,11 +24,12 @@ class TodoApp extends React.Component<TodoAppProps, TodoAppState> {
     };
   }
 
-  handleChange = (e) => {
-    this.setState({ text: e.target.value });
+  handleChange = (e: MouseEvent) => {
+    const target = e.target as HTMLInputElement;
+    this.setState({ text: target.value });
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = (e: MouseEvent) => {
     const { text } = this.state;
 
     e.preventDefault();
@@ -39,7 +40,7 @@ class TodoApp extends React.Component<TodoAppProps, TodoAppState> {
       text,
       id: Date.now()
     };
-    this.setState(state => ({
+    this.setState((state: TodoAppState) => ({
       items: state.items.concat(newItem),
       text: ''
     }));

@@ -5,10 +5,10 @@ import {
   isString
 } from './utils';
 import React from './../react/index';
-import { ComponentElement, ReactVDOM } from '../../typings/index';
+import { VNode, ReactHtmlElement, MountElement } from '../../typings/index';
 
-export function render(vdom: ComponentElement, parent?: ReactVDOM): ReactVDOM {
-  const mount = parent ? (el: any) => parent.appendChild(el) : (el: any) => el;
+export function render(vdom: VNode, parent?: ReactHtmlElement | null): ReactHtmlElement {
+  const mount = parent ? (el: MountElement) => parent.appendChild(el) : (el: any) => el;
 
   // 渲染数字和字符串
   if (isStrOrNum(vdom)) {
@@ -34,13 +34,13 @@ export function render(vdom: ComponentElement, parent?: ReactVDOM): ReactVDOM {
 
   // 渲染 React 组件
   if (typeof vdom === 'object' && vdom !== null && isFunction(vdom.type)) {
-    const type = vdom.type;
-    const isClassComponent: boolean = !!(type as any).prototype.render;
+    const type = vdom.type as any;
+    const isClassComponent: boolean = !!type.prototype.render;
     const instance = isClassComponent
-      ? new (type as any)(vdom.props)
+      ? new type(vdom.props)
       : new React.Component(vdom.props);
     const renderVDOM = isClassComponent
-      ? (type as any).prototype.render
+      ? type.prototype.render
       : type;
 
     return instance._render(renderVDOM, vdom, parent);
@@ -54,7 +54,7 @@ export function render(vdom: ComponentElement, parent?: ReactVDOM): ReactVDOM {
   throw new Error(`unkown vdom type: ${String(vdom)}`);
 }
 
-export function setAttribute(dom: ReactVDOM, key: string, value: any) {
+export function setAttribute(dom: ReactHtmlElement, key: string, value: any) {
   // 事件属性
   if (key.startsWith('on') && isFunction(value)) {
     const eventType = key.slice(2).toLocaleLowerCase();
@@ -66,9 +66,9 @@ export function setAttribute(dom: ReactVDOM, key: string, value: any) {
     dom.addEventListener(eventType, value);
   }
   else if (key === 'checked' || key === 'value' || key === 'className') {
-    (dom as any)[key] = value;
+    dom[key] = value;
   }
-  else if (key === 'ref' && typeof value === 'function') {
+  else if (key === 'ref' && isFunction(value)) {
     value(dom);
   }
   else if (key === 'key') {

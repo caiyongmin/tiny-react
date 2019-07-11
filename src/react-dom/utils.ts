@@ -1,26 +1,26 @@
-import { ComponentElement } from "../../typings/index";
+import { VNode } from "../../typings/index";
 
-export function isStrOrNum(val: any): boolean {
+export function isStrOrNum(val: any): val is string | number {
   return typeof val === 'string' || typeof val === 'number';
 }
 
-export function isUnRenderVDom(val: any): boolean {
-  return typeof val === 'boolean' || val === 'undefined' || val === null;
+export function isUnRenderVDom(val: any): val is boolean | undefined | null {
+  return typeof val === 'boolean' || val === undefined || val === null;
 }
 
 export function isObject(val: any): boolean {
   return typeof val === 'object' && val !== null;
 }
 
-export function isFunction(val: any): boolean {
+export function isFunction(val: any): val is Function {
   return typeof val === 'function';
 }
 
-export function isString(val: any): boolean {
+export function isString(val: any): val is string {
   return typeof val === 'string';
 }
 
-export function isSameNodeType(dom: any, vdom: ComponentElement): boolean {
+export function isSameNodeType(dom: any, vdom: VNode): boolean {
   // 文本节点
   if (typeof vdom === 'string' || typeof vdom === 'number') {
     return dom.nodeType === 3;

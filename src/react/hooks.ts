@@ -1,5 +1,6 @@
 import Component from './component';
 import ReactDOM from './../react-dom/index';
+import { isFunction } from "./../react-dom/utils";
 import { HookState, HookStateValue } from '../../typings/index';
 
 let dispatcher: Hooks;
@@ -72,7 +73,7 @@ export class Hooks {
 }
 
 function invokeOrReturn(arg: any, f: any) {
-  return typeof f === 'function' ? f(arg) : f;
+  return isFunction(f) ? f(arg) : f;
 }
 
 function argsChanged(oldArgs: any[], newArgs: any[]) {
@@ -87,13 +88,13 @@ export function invokeCleanup(effect: HookState) {
 
 export function invokeEffect(effect: HookState) {
   const cleanup = effect._effectCallback();
-  if (typeof cleanup === 'function') {
+  if (isFunction(cleanup)) {
     effect._cleanup = cleanup;
   }
 }
 
 function handleEffects(effects: HookState[]): any[] {
-  effects.forEach(invokeCleanup);
+  effects.forEach(invokeCleanup);  // cleanup before re-running the effect
   effects.forEach(invokeEffect);
   return [];
 }

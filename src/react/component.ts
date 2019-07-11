@@ -1,22 +1,21 @@
 import { Hooks, setDispatcher, invokeCleanup } from './hooks';
 import setState from './setState';
 import ReactDOM from '../react-dom/index';
-import { shallowCompareObject } from './../react-dom/utils';
+import { shallowCompareObject, isFunction } from './../react-dom/utils';
 import {
-  ReactVDOM,
+  ReactHtmlElement,
   ComponentProps,
   ComponentState,
   ComponentHooks,
   ReactElement,
-  ReactVNode,
 } from '../../typings/index';
 
 class Component<P = {}, S = {}> {
   private isReactComponent: boolean;
   public hooks: Hooks;
   public __hooks: ComponentHooks;
-  public base: ReactVNode;
-  public parentNode: ReactVNode;
+  public base: null | ReactHtmlElement;
+  public parentNode: null | ReactHtmlElement;
   public renderVDOM: (props: ComponentProps<P>) => ReactElement;
   public _afterPaintQueued: boolean;
 
@@ -47,9 +46,9 @@ class Component<P = {}, S = {}> {
   public _render(
     renderVDOM: (props: ComponentProps<P>) => ReactElement,
     vdom: ReactElement,
-    parent: ReactVDOM
-  ): ReactVNode {
-    if (typeof this.componentWillMount === 'function') {
+    parent: ReactHtmlElement
+  ): null | ReactHtmlElement {
+    if (isFunction(this.componentWillMount)) {
       this.componentWillMount();
     }
 
@@ -58,7 +57,7 @@ class Component<P = {}, S = {}> {
     this.setDispatcher();
     const dom = ReactDOM.render(this.renderVDOM(this.props), parent);
 
-    if (typeof this.componentDidMount === 'function') {
+    if (isFunction(this.componentDidMount)) {
       this.componentDidMount();
     }
 
@@ -70,7 +69,7 @@ class Component<P = {}, S = {}> {
     return dom;
   }
 
-  public _update(isUpdateState?: boolean): ReactVNode {
+  public _update(isUpdateState?: boolean): null | ReactHtmlElement {
     if (this.base === null) {
       return null;
     }
@@ -82,14 +81,14 @@ class Component<P = {}, S = {}> {
     // 如果是更新 state 更新渲染时，不执行 componentWillReceiveProps 生命周期方法
     if (!isUpdateState) {
       // 调用组件的 componentWillReceiveProps 生命周期方法
-      if (typeof this.componentWillReceiveProps === 'function') {
+      if (isFunction(this.componentWillReceiveProps)) {
         this.componentWillReceiveProps(this.nextProps);
       }
     }
 
     // 判断是否需要更新组件
     let shouldComponentUpdate = true;
-    if (typeof this.shouldComponentUpdate === 'function') {
+    if (isFunction(this.shouldComponentUpdate)) {
       shouldComponentUpdate = this.shouldComponentUpdate(this.nextProps, this.nextState);
     }
     if (!shouldComponentUpdate) {
@@ -97,7 +96,7 @@ class Component<P = {}, S = {}> {
     }
 
     // 执行组件的 componentWillUpdate 生命周期方法
-    if (typeof this.componentWillUpdate === 'function') {
+    if (isFunction(this.componentWillUpdate)) {
       this.componentWillUpdate(this.nextProps, this.nextState);
     }
 
@@ -112,7 +111,7 @@ class Component<P = {}, S = {}> {
     const result = ReactDOM.diff(dom, vdom, this.parentNode);
 
     // 组件更新完，执行组件的 componentDidUpdate 生命周期方法
-    if (typeof this.componentDidUpdate === 'function') {
+    if (isFunction(this.componentDidUpdate)) {
       this.componentDidUpdate(this.prevProps, this.prevState);
     }
 
@@ -131,7 +130,11 @@ class Component<P = {}, S = {}> {
     }
   }
 
-  public setState(stateUpdater: any) {
+  public setState(
+    stateUpdater: (
+      (state?: ComponentState<S>, props?: ComponentProps<P>) => ComponentState<S>
+    ) | Partial<ComponentState<S>>
+  ) {
     setState(stateUpdater, this);
   }
 
@@ -139,7 +142,7 @@ class Component<P = {}, S = {}> {
 
   public componentDidMount?() {}
 
-  public shouldComponentUpdate?(nextProps: any, nextState: any) {
+  public shouldComponentUpdate?(nextProps: ComponentProps<P>, nextState: ComponentState<S>) {
     return !shallowCompareObject(nextProps, this.props)
       || !shallowCompareObject(nextState, this.state);
   }

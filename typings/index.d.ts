@@ -1,39 +1,38 @@
 import Component from '../src/react/component';
 
-export interface ReactVDOM extends HTMLElement {
+export interface ReactHtmlElement extends HTMLElement {
   __componentInstance?: any;
   __key?: Key;
   __eventListeners?: {
     [key: string]: any
   };
+  [key: string]: any;
 }
-
-export type Ele = Text | HTMLElement;
-
-export type ReactVNode = null | ReactVDOM;
 
 export type Primitive = null | undefined | string | number | boolean | symbol;
 
 export type ReactElement = {
-  type: ElementType,
+  type: ComponentType,
   props: ComponentProps,
   children: ReactElement[]
 };
 
-export type ComponentElement = Primitive | ReactElement;
+export type VNode = Primitive | ReactElement;
+
+export type MountElement = Text | HTMLElement;
 
 export type Key = string | number;
 
 export type Props = {
   key?: Key;
-  children?: ComponentElement[]
+  children?: VNode[]
 };
 
 export type ComponentProps<P = Props> = Readonly<Props & P>;
 
 export type ComponentState<S = {}> = Readonly<S>;
 
-export type ElementType = string | Component;
+export type ComponentType = string | Component;
 
 export type ComponentHooks = null | {
   _list: any[],

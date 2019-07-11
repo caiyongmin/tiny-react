@@ -1,7 +1,18 @@
-const setStateQueue: any[] = [];
-const renderQueue: any[] = [];
+import { isFunction } from "./../react-dom/utils";
+import Component from "./component";
+import { ComponentProps, ComponentState } from '../../typings/index';
 
-export default function setState(stateUpdater: any, component: any) {
+type StateUpdater = (
+  (state?: ComponentState<any>, props?: ComponentProps<any>) => ComponentState<any>
+) | Partial<ComponentState<any>>
+
+const setStateQueue: {
+  stateUpdater: StateUpdater;
+  component: Component<any, any>;
+}[] = [];
+const renderQueue: Component<any, any>[] = [];
+
+export default function setState(stateUpdater: StateUpdater, component: Component<any, any>) {
   if (setStateQueue.length === 0) {
     defer(flush);
   }
@@ -26,7 +37,7 @@ function flush(): void {
   while (item = setStateQueue.shift()) {
     const { stateUpdater, component } = item;
     component.prevState = Object.assign({}, component.state);
-    const updateState = typeof stateUpdater === 'function'
+    const updateState = isFunction(stateUpdater)
       ? stateUpdater(component.prevState, component.props)
       : stateUpdater;
     component.nextState = Object.assign({}, component.state, updateState);
