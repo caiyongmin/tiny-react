@@ -8,7 +8,9 @@ import {
 import { VNode, ReactHtmlElement, ReactElement, MountElement } from '../../typings/index';
 
 export function diff(dom: ReactHtmlElement, vdom: VNode, parent?: ReactHtmlElement | null): ReactHtmlElement {
-  const replace = parent ? (el: MountElement) => parent.replaceChild(el, dom) : ((el: any) => el);
+  const replace = parent ? (el: MountElement) => {
+    return parent.replaceChild(el, dom);
+  } : ((el: any) => el);
   // 不能渲染的 vdom 对象，先转成空字符串
   vdom = isUnRenderVDom(vdom) ? '' : vdom;
   // 把数字先转成字符串
@@ -17,7 +19,8 @@ export function diff(dom: ReactHtmlElement, vdom: VNode, parent?: ReactHtmlEleme
   // 节点类型不同，节点重新渲染
   if (!isSameNodeType(dom, vdom)) {
     dom.__componentInstance.cleanup();
-    return replace(render(vdom, parent));
+    const el = render(vdom, parent);
+    return replace(el);
   }
 
   // 节点类型相同，做具体的 diff 操作
@@ -34,7 +37,9 @@ export function diff(dom: ReactHtmlElement, vdom: VNode, parent?: ReactHtmlEleme
   // Component 组件
   if (typeof vdom === 'object' && vdom !== null && isFunction(vdom.type)) {
     const instance = dom.__componentInstance;
-    return instance._update();
+    const isUpdateState = false;
+    const nextProps = vdom.props;
+    return instance._update(isUpdateState, nextProps);
   }
 
   throw new Error(`unkown vdom type: ${String(vdom)}`);
@@ -50,11 +55,13 @@ function diffNativeDom(dom: any, vdom: ReactElement) {
     pool[key] = child;
   });
 
-  [...vdom.children].forEach((child, index) => {
-    const key = child.props && child.props.key || `__index_${index}`;
-    pool[key] ? diff(pool[key], child, dom) : render(child, dom);
-    delete pool[key];
-  });
+  if (vdom.children && vdom.children.length) {
+    [...vdom.children].forEach((child, index) => {
+      const key = child.props && child.props.key || `__index_${index}`;
+      pool[key] ? diff(pool[key], child, dom) : render(child, dom);
+      delete pool[key];
+    });
+  }
 
   for (const key in pool) {
     const instance = pool[key].__componentInstance;

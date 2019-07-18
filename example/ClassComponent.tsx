@@ -20,7 +20,7 @@ class TodoApp extends React.Component<TodoAppProps, TodoAppState> {
 
     this.state = {
       items: [],
-      text: ''
+      text: '',
     };
   }
 
@@ -38,20 +38,22 @@ class TodoApp extends React.Component<TodoAppProps, TodoAppState> {
     }
     const newItem = {
       text,
-      id: Date.now()
+      id: Date.now(),
     };
     this.setState((state: TodoAppState) => ({
       items: state.items.concat(newItem),
-      text: ''
+      text: '',
     }));
   }
 
   render() {
+    const { title } = this.props;
     const { items, text } = this.state;
 
     return (
       <div>
-        <h3>TODO</h3>
+        <h2>Class Component</h2>
+        <h3>{title}</h3>
         <TodoList items={items} />
         <form>
           <label htmlFor="new-todo">
@@ -79,7 +81,7 @@ class TodoList extends React.Component<TodoListProps> {
 
     return (
       <ol>
-        {items.map(item => (
+        {items.map((item: ItemType) => (
           <li key={item.id}>{item.text}</li>
         ))}
       </ol>

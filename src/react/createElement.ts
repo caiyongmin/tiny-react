@@ -8,7 +8,7 @@ function createElement(
   return {
     type,
     props: props || {},
-    children: children || []
+    children: children
   };
 }
 

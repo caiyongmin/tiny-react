@@ -6,9 +6,11 @@ import { HookState, HookStateValue } from '../../typings/index';
 let dispatcher: Hooks;
 let afterPaintEffects: Component[] = [];
 
+// TODO: split Hooks method from Hooks
+// TODO: need better typing
 export class Hooks {
-  private currentIndex: number = 0;
   private currentInstance: Component;
+  public currentIndex: number = 0;
 
   constructor(instance: Component) {
     this.currentInstance = instance;
@@ -32,7 +34,44 @@ export class Hooks {
     }
   }
 
-  private useReducer(reducer: any, initialState: any, init?: (initialState: any) => any): HookStateValue {
+  public useMemo(callback: () => any, args: any[]) {
+    const hookState = this.getHookState(this.currentIndex++);
+
+    if (argsChanged(hookState._effectArgs, args)) {
+      hookState._effectCallback = callback;
+      hookState._effectArgs = args;
+
+      return hookState.__value = callback();
+    }
+
+    return hookState.__value;
+  }
+
+  public useCallback(callback: () => void, args: any[]) {
+    return this.useMemo(() => callback, args);
+  }
+
+  public useRef(initialValue: any) {
+    return this.useMemo(() => ({ current: initialValue }), []);
+  }
+
+  public useContext(context: any) {
+    const provider = this.currentInstance.context[context.ctxId];
+
+    if (!provider) {
+      return context._defaultValue;
+    }
+
+    const hookState = this.getHookState(this.currentIndex++);
+    if (hookState.__value == null) {
+      hookState.__value = [true, () => true];
+      provider.sub(this.currentInstance);
+    }
+
+    return provider.props.value;
+  }
+
+  public useReducer(reducer: any, initialState: any, init?: (initialState: any) => any): HookStateValue {
     const hookState = this.getHookState(this.currentIndex++);
 
     if (!hookState.__componentInstance) {
@@ -43,21 +82,26 @@ export class Hooks {
           const nextValue = reducer(hookState.__value[0], action);
           if (hookState.__value[0] !== nextValue) {
             hookState.__value[0] = nextValue;
-            this.currentIndex = 0;  // 重新渲染之前，把索引位置置为初始值 0
-            setDispatcher(hookState.__componentInstance);  // 重新渲染之前，设置当前的 dispatcher
-            // 重新渲染组件
-            const { base, props, renderVDOM, parentNode } = hookState.__componentInstance;
-            if (base !== null) {
-              ReactDOM.diff(base, renderVDOM(props), parentNode);
-            }
+            this.updateComponent(hookState, nextValue);
           }
-
           return nextValue;
         }
       ];
     }
 
     return hookState.__value;
+  }
+
+  private updateComponent(hookState: HookState, nextValue: any) {
+    // 重新渲染之前，把索引位置置为初始值 0
+    this.currentIndex = 0;
+    // 重新渲染之前，设置当前的 dispatcher
+    setDispatcher(hookState.__componentInstance);
+    // 重新渲染组件
+    const { base, props, renderVDOM, parentNode } = hookState.__componentInstance;
+    if (base !== null) {
+      ReactDOM.diff(base, renderVDOM(props), parentNode);
+    }
   }
 
   private getHookState(index: number): HookState {
@@ -124,6 +168,35 @@ export function useState(initialState: any): HookStateValue {
   return dispatcher.useState(initialState);
 }
 
+// TODO: need better typing
 export function useEffect(callback: () => any, args: any[]): void {
   return dispatcher.useEffect(callback, args);
+}
+
+export function useReducer<T>(
+  reducer: (state: T, action: { type: string; [key: string]: any }) => T,
+  initialState: T,
+  init?: (initialState: T) => T
+): [T, (action: { type: string; [key: string]: any }) => any] {
+  return dispatcher.useReducer(reducer, initialState, init);
+}
+
+// TODO: need better typing
+export function useMemo(callback: () => any, args: any[]) {
+  return dispatcher.useMemo(callback, args);
+}
+
+// TODO: need better typing
+export function useCallback(callback: any, args: any[]) {
+  return dispatcher.useCallback(callback, args);
+}
+
+// TODO: need better typing
+export function useRef(initialValue: any) {
+  return dispatcher.useRef(initialValue);
+}
+
+// TODO: need better typing
+export function useContext(defaultValue: any) {
+  return dispatcher.useContext(defaultValue);
 }

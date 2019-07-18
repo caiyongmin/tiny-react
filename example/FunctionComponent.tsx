@@ -13,6 +13,7 @@ export default function HooksFunction() {
 
   return (
     <div>
+      <h2>Function Component</h2>
       <button onClick={() => {
         setToggle(!toggle);
       }}>useState toggle</button>

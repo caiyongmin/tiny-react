@@ -3,7 +3,7 @@ import Component from "./component";
 import { ComponentProps, ComponentState } from '../../typings/index';
 
 type StateUpdater = (
-  (state?: ComponentState<any>, props?: ComponentProps<any>) => ComponentState<any>
+  (prevState?: ComponentState<any>, props?: ComponentProps<any>) => ComponentState<any>
 ) | Partial<ComponentState<any>>
 
 const setStateQueue: {

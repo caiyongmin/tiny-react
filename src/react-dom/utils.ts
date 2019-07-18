@@ -16,6 +16,27 @@ export function isFunction(val: any): val is Function {
   return typeof val === 'function';
 }
 
+export function getFunctionBody (fn: Function): string {
+  const toString = Function.prototype.toString;
+  return toString.call(fn).replace(/^[^{]*{\s*/, '').replace(/\s*}[^}]*$/, '')
+}
+
+export function isClass(val: any): boolean {
+  if (typeof val !== 'function') {
+    return false;
+  }
+
+  if (/^class[\s{]/.test(val.toString())) {
+    return true;
+  }
+
+  const fnBody = getFunctionBody(val);
+  const result = (/classCallCheck/.test(fnBody)
+    || /TypeError\("Cannot call a class as a function"\)/.test(fnBody));
+
+  return result;
+}
+
 export function isString(val: any): val is string {
   return typeof val === 'string';
 }

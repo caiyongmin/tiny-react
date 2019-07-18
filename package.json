@@ -31,13 +31,15 @@
     "url": "https://github.com/caiyongmin/creact/issues"
   },
   "homepage": "https://github.com/caiyongmin/creact#readme",
-  "dependencies": {
-  },
   "devDependencies": {
+    "@babel/core": "~7.5.4",
+    "@babel/plugin-transform-runtime": "~7.5.0",
+    "@babel/preset-env": "~7.5.4",
+    "@babel/runtime": "^7.5.4",
+    "rimraf": "~2.6.3",
     "tslint-config-airbnb": "~5.11.1",
     "tslint-config-prettier": "~1.18.0",
     "tslint-react": "~4.0.0",
-    "rimraf": "^2.6.3",
     "typescript": "~3.4.1"
   }
 }

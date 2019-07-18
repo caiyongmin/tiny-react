@@ -14,7 +14,7 @@ export type Primitive = null | undefined | string | number | boolean | symbol;
 export type ReactElement = {
   type: ComponentType,
   props: ComponentProps,
-  children: ReactElement[]
+  children?: ReactElement[]
 };
 
 export type VNode = Primitive | ReactElement;
