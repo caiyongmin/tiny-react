@@ -1,6 +1,6 @@
 # creact
 
-[![npm version](https://img.shields.io/npm/v/@caiym/react.svg?style=flat)](https://www.npmjs.com/package/@caiym/react) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](README.md)
+[![npm version](https://img.shields.io/npm/v/@caiym/react.svg?style=flat)](https://www.npmjs.com/package/@caiym/react) ![](https://badgen.net/bundlephobia/minzip/@caiym/react) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](README.md)
 
 [React](https://reactjs.org/) personal implementation version.
 
@@ -33,14 +33,14 @@ npm start
 
 ## Examples
 
-- render Function Component and Class Component.
-- render useState Component.
-- render useEffect Component.
-- render useReducer Component.
-- render useCallback Component.
-- render useMemo Component.
-- render useRef Component.
-- render useContext Component.
+- [render Function Component and Class Component](#render-function-component-and-class-component).
+- [render useState Component](#render-usestate-component).
+- [render useEffect Component](#render-useeffect-component).
+- [render useReducer Component](#render-usereducer-component).
+- [render useCallback Component](#render-usecallback-component).
+- [render useMemo Component](#render-usememo-component).
+- [render useRef Component](#render-useref-component).
+- [render useContext Component](#render-usecontext-component).
 
 ### render Function Component and Class Component
 
@@ -198,6 +198,8 @@ ReactDOM.render(<App />, document.getElementById("root"));
 
 ### render useState Component
 
+[![Edit creact useState demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/creact-usestate-demo-njttc?fontsize=14)
+
 ```tsx
 import { useState } from "@caiym/react";
 
@@ -220,6 +222,8 @@ function UseStateComponent() {
 ```
 
 ### render useEffect Component
+
+[![Edit creact useEffect demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/creact-useeffect-demo-nqt27?fontsize=14)
 
 ```tsx
 import { useState, useEffect } from "@caiym/react";
@@ -253,6 +257,8 @@ function UseEffectComponent() {
 ```
 
 ### render useReducer Component
+
+[![Edit creact useReducer demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/creact-usereducer-demo-fvz45?fontsize=14)
 
 ```tsx
 import { useReducer } from "@caiym/react";
@@ -322,6 +328,8 @@ function UseReducerComponent() {
 
 ### render useCallback Component
 
+[![Edit creact useCallback demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/creact-usecallback-demo-422lf?fontsize=14)
+
 ```tsx
 import { useCallback, useState } from "@caiym/react";
 
@@ -353,7 +361,9 @@ function UseCallbackComponent() {
 
 ### render useMemo Component
 
-In fact, the example is't very suitable, because re-render of MemoChild components has been avoided by props comparison. For a better example, look at the example of render useContext Component.
+In fact, the example is't very suitable, because re-render of MemoChild component has been avoided by props comparison. For a better example, please look at the example of [render useContext Component](#render-usecontext-component).
+
+[![Edit creact useMemo demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/creact-usememo-demo-r8rwp?fontsize=14)
 
 ```tsx
 import { useMemo, useState } from "@caiym/react";
@@ -389,6 +399,8 @@ function UseMemoComponent() {
 
 ### render useRef Component
 
+[![Edit creact useRef demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/creact-useref-demo-955mp?fontsize=14)
+
 ```tsx
 import { useRef } from "@caiym/react";
 
@@ -410,6 +422,8 @@ function UseRefComponent() {
 ```
 
 ### render useContext Component
+
+[![Edit creact useContext demo](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/creact-usecontext-demo-f7bkf?fontsize=14)
 
 ```tsx
 import { React, useState, useContext } from "@caiym/react";

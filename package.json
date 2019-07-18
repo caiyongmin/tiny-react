@@ -1,6 +1,6 @@
 {
   "name": "@caiym/react",
-  "version": "0.1.10",
+  "version": "0.2.0",
   "description": "React personal implementation version",
   "main": "dist/index.js",
   "directories": {
