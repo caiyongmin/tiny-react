@@ -2,6 +2,7 @@ doc
 draft
 dist
 .cache
+temp
 
 # Logs
 logs

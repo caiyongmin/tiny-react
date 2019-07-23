@@ -9,7 +9,7 @@ import {
   useEffect,
 } from '../src';
 
-function UseStateComponent() {
+export function UseStateComponent() {
   const initialValue = 0;
   const [ count, setCount ] = useState(initialValue);
 
@@ -26,7 +26,7 @@ function UseStateComponent() {
   );
 }
 
-function UseEffectComponent() {
+export function UseEffectComponent() {
   const [ toggle, setToggle ] = useState(false);
   const [ count, setCount ] = useState(0);
 
@@ -83,7 +83,7 @@ const countReducer = (state: ReducerState, action: { type: string; [key: string]
       return state;
   }
 }
-function UseReducerComponent() {
+export function UseReducerComponent() {
   const [ state, dispatch ] = useReducer(countReducer, initialState);
   const { count, loading } = state;
   const onIncreaseHandler = async () => {
@@ -127,7 +127,7 @@ function useInputValue(initialValue: string) {
     onChange,
   };
 }
-function UseCallbackComponent() {
+export function UseCallbackComponent() {
   const name = useInputValue('Jack');
 
   return (
@@ -146,7 +146,7 @@ function MemoChild(props: {
     <div>MemoChild: {+new Date()}</div>
   ), [props.count]);
 }
-function UseMemoComponent() {
+export function UseMemoComponent() {
   let [ count, setCount ] = useState(0);
   let [ num, setNum ] = useState(0);
 
@@ -167,7 +167,7 @@ function UseMemoComponent() {
   );
 }
 
-function UseRefComponent() {
+export function UseRefComponent() {
   const inputEl = useRef(null);
   const onButtonClick = () => {
     // `current` points to the mounted text input element
@@ -202,7 +202,7 @@ function CommonChild(props: {
 }) {
   return <div>CommonChild: {+new Date()}</div>;
 }
-function UseContextComponent() {
+export function UseContextComponent() {
   const [ count, setCount ] = useState(0);
   return (
     <div>

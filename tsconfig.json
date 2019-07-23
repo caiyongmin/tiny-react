@@ -12,7 +12,7 @@
     "lib": ["dom", "es2015", "es2016", "es2017", "esnext"],
     "module": "commonjs",
     "typeRoots": [
-      "./../node_modules/@types",
+      "node_modules/@types",
       "typings"
     ]
   },
