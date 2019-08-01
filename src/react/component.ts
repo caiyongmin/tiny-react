@@ -83,17 +83,18 @@ class Component<P = {}, S = {}> {
     return dom;
   }
 
-  public _update(isUpdateState?: boolean, nextProps?: ComponentProps<P>, isForceUpdate?: boolean): null | ReactHtmlElement {
+  public _update(isUpdateState?: boolean, isForceUpdate?: boolean): null | ReactHtmlElement {
     if (this.base === null) {
       return null;
     }
 
     const dom = this.base;
-    this.nextProps = Object.assign({}, dom.__componentInstance.props, nextProps);
+    // TODO: may not use nextProps params, need use this.nextProps
+    this.nextProps = Object.assign({}, dom.__componentInstance.props, this.nextProps);
     this.nextState = this.nextState || Object.assign({}, this.state);
 
-    // 如果是 forceUpdate，不执行 componentWillReceiveProps 和 shouldComponentUpdate 生命周期方法
-    if (isForceUpdate) {
+    // 如果不是 forceUpdate，不执行 componentWillReceiveProps 和 shouldComponentUpdate 生命周期方法
+    if (!isForceUpdate) {
       // 如果是由更新 state 来更新渲染时，不执行 componentWillReceiveProps 生命周期方法
       if (!isUpdateState) {
         // 调用组件的 componentWillReceiveProps 生命周期方法
@@ -169,7 +170,7 @@ class Component<P = {}, S = {}> {
   }
 
   public forceUpdate(callback?: () => any) {
-    this._update(false, undefined, true);
+    this._update(false, true);
     if (callback) {
       callback();
     }

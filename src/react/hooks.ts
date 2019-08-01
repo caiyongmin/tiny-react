@@ -57,7 +57,6 @@ export class Hooks {
 
   public useContext(context: any) {
     const provider = this.currentInstance.context[context.ctxId];
-
     if (!provider) {
       return context._defaultValue;
     }
@@ -82,7 +81,7 @@ export class Hooks {
           const nextValue = reducer(hookState.__value[0], action);
           if (hookState.__value[0] !== nextValue) {
             hookState.__value[0] = nextValue;
-            this.updateComponent(hookState, nextValue);
+            this.updateComponent(hookState);
           }
           return nextValue;
         }
@@ -92,7 +91,7 @@ export class Hooks {
     return hookState.__value;
   }
 
-  private updateComponent(hookState: HookState, nextValue: any) {
+  private updateComponent(hookState: HookState) {
     // 重新渲染之前，把索引位置置为初始值 0
     this.currentIndex = 0;
     // 重新渲染之前，设置当前的 dispatcher

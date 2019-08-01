@@ -1,9 +1,9 @@
-import { ComponentType, ComponentProps, ReactElement } from '../../typings/index';
+import { ComponentType, ComponentProps, ReactElement, VNode } from '../../typings/index';
 
 function createElement(
   type: ComponentType,
-  props: ComponentProps,
-  ...children: ReactElement[]
+  props?: ComponentProps<any>,
+  ...children: VNode[]
 ): ReactElement {
   return {
     type,

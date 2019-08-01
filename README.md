@@ -240,7 +240,7 @@ function UseEffectComponent() {
   useEffect(() => {
     console.info('===run useEffect function===');
     return () => {
-      console.info('===unmount before re-run useEffect function===');
+      console.info('===cleanup before re-run useEffect function===');
     };
   }, [toggle]);
 

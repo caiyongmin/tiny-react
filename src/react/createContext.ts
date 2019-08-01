@@ -1,5 +1,6 @@
 import Component from "./component";
 import { isFunction } from "../react-dom/utils";
+import { ReactDOM } from "index";
 
 let id: number = -1;
 
@@ -26,18 +27,22 @@ export default function createContext<T>(defaultValue: T): Context<T> {
       providerCtx[ctxId] = provider;
       return providerCtx;
     };
-    provider.shouldComponentUpdate = () => {
+    provider.shouldComponentUpdate = (props: any) => {
+      // TODO: forceUpdate all children
       subs.map((component: Component) => {
-        // TODO: re-render component
+				if (component.parentNode) {
+          provider.props = Object.assign({}, provider.props, props);
+          component.forceUpdate();
+				}
       });
     };
     provider.sub = (component: Component) => {
       subs.push(component);
-      const oldWillUnMount = component.componentWillUnmount;
+      const _WillUnMount = component.componentWillUnmount;
       component.componentWillUnmount = () => {
         subs.slice(subs.indexOf(component), 1);
-        if (isFunction(oldWillUnMount)) {
-          oldWillUnMount();
+        if (isFunction(_WillUnMount)) {
+          _WillUnMount();
         }
       }
     }

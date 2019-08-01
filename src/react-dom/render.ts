@@ -27,12 +27,16 @@ export function render(vdom: VNode, parent?: ReactHtmlElement | null, context?: 
     const dom = mount(document.createElement(String(vdom.type)));
     if (vdom.children &&  vdom.children.length) {
       for (const child of [...vdom.children]) {
+        // TODO: his can create performance issues and possible bugs.
+        // For example, the content of the first input would stay reflected in first input after the sort
         render(child, dom, context);
       }
     }
-    Object.entries(vdom.props).forEach(([key, value]) => {
-      setAttribute(dom, key, value);
-    });
+    if (vdom.props) {
+      Object.entries(vdom.props).forEach(([key, value]) => {
+        setAttribute(dom, key, value);
+      });
+    }
     return dom;
   }
 

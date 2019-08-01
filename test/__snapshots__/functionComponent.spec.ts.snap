@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`function component should render correct DOM 1`] = `
+<div
+  id="root"
+>
+  <div>
+    <button
+      id="add"
+    >
+      addCount
+    </button>
+    <button
+      id="reset"
+    >
+      reset
+    </button>
+    <button
+      id="same"
+    >
+      same
+    </button>
+    <span
+      id="result"
+    >
+      0
+    </span>
+  </div>
+</div>
+`;

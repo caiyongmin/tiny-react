@@ -7,7 +7,12 @@ import {
 } from './utils';
 import { VNode, ReactHtmlElement, ReactElement, MountElement } from '../../typings/index';
 
-export function diff(dom: ReactHtmlElement, vdom: VNode, parent?: ReactHtmlElement | null): ReactHtmlElement {
+export function diff(
+  dom: ReactHtmlElement,
+  vdom: VNode,
+  parent?: ReactHtmlElement | null,
+): ReactHtmlElement {
+  // console.info('diff vdom', vdom);
   const replace = parent ? (el: MountElement) => {
     return parent.replaceChild(el, dom);
   } : ((el: any) => el);
@@ -16,9 +21,15 @@ export function diff(dom: ReactHtmlElement, vdom: VNode, parent?: ReactHtmlEleme
   // 把数字先转成字符串
   vdom = typeof vdom === 'number' ? String(vdom) : vdom;
 
-  // 节点类型不同，节点重新渲染
+  // 节点类型不同或者强制渲染时，节点重新渲染
   if (!isSameNodeType(dom, vdom)) {
-    dom.__componentInstance.cleanup();
+    // console.info('diff !isSameNodeType');
+    if (dom.__componentInstance && dom.__componentInstance.componentWillUnmount) {
+      dom.__componentInstance.componentWillUnmount();
+    }
+    if (dom.__componentInstance && dom.__componentInstance.cleanup) {
+      dom.__componentInstance.cleanup();
+    }
     const el = render(vdom, parent);
     return replace(el);
   }
@@ -26,20 +37,23 @@ export function diff(dom: ReactHtmlElement, vdom: VNode, parent?: ReactHtmlEleme
   // 节点类型相同，做具体的 diff 操作
   // 文本节点
   if (isString(vdom)) {
+    // console.info('diff isString');
     return dom.textContent !== vdom ? replace(document.createTextNode(String(vdom))) : dom;
   }
 
   // DOM 节点
   if (typeof vdom === 'object' && vdom !== null && isString(vdom.type)) {
+    // console.info('diff DOM');
     return diffNativeDom(dom, vdom);
   }
 
   // Component 组件
   if (typeof vdom === 'object' && vdom !== null && isFunction(vdom.type)) {
+    // console.info('diff Component');
     const instance = dom.__componentInstance;
     const isUpdateState = false;
-    const nextProps = vdom.props;
-    return instance._update(isUpdateState, nextProps);
+    instance.nextProps = vdom.props;
+    return instance._update(isUpdateState);
   }
 
   throw new Error(`unkown vdom type: ${String(vdom)}`);
@@ -56,7 +70,7 @@ function diffNativeDom(dom: any, vdom: ReactElement) {
   });
 
   if (vdom.children && vdom.children.length) {
-    [...vdom.children].forEach((child, index) => {
+    [...vdom.children].forEach((child: any, index: number) => {
       const key = child.props && child.props.key || `__index_${index}`;
       pool[key] ? diff(pool[key], child, dom) : render(child, dom);
       delete pool[key];
@@ -65,7 +79,9 @@ function diffNativeDom(dom: any, vdom: ReactElement) {
 
   for (const key in pool) {
     const instance = pool[key].__componentInstance;
-    instance.cleanup();
+    if (instance && instance.cleanup) {
+      instance.cleanup();
+    }
     if (instance && instance.componentWillUnmount) {
       instance.componentWillUnmount();
     }

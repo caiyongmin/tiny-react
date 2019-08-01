@@ -36,7 +36,7 @@ function flush(): void {
 
   while (item = setStateQueue.shift()) {
     const { stateUpdater, component } = item;
-    component.prevState = Object.assign({}, component.state);
+    component.prevState = Object.assign({}, component.state, component.nextState);
     const updateState = isFunction(stateUpdater)
       ? stateUpdater(component.prevState, component.props)
       : stateUpdater;

@@ -54,7 +54,8 @@ export function isSameNodeType(dom: any, vdom: VNode): boolean {
 
   // 组件
   if (dom && dom.__componentInstance && typeof vdom === 'object' && vdom !== null && vdom.type) {
-    return dom.__componentInstance.renderVDOM === vdom.type;
+    return dom.__componentInstance.renderVDOM === vdom.type
+      || dom.__componentInstance.renderVDOM === (vdom.type as any).prototype.render;
   }
 
   return false;

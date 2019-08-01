@@ -33,13 +33,13 @@ export function UseEffectComponent() {
   useEffect(() => {
     console.info('===run useEffect function===');
     return () => {
-      console.info('===unmount before re-run useEffect function===');
+      console.info('===cleanup before re-run useEffect function===');
     };
   }, [toggle]);
 
   return (
     <div>
-      <h3>useEffect</h3>
+      {/* <h3>useEffect</h3> */}
       <div style={{ fontSize: '12px', color: 'gray' }}>需要打开控制台查看运行结果</div>
       <button onClick={() => setToggle(!toggle)}>
         setToggle trigger run useEffect function, toggle: {String(toggle)}
@@ -223,14 +223,14 @@ export function UseContextComponent() {
 export default function HooksComponent() {
   return (
     <div>
-      <h2>Hooks Component</h2>
-      <UseStateComponent />
+      {/* <h2>Hooks Component</h2> */}
+      {/* <UseStateComponent /> */}
       <UseEffectComponent />
-      <UseReducerComponent />
-      <UseCallbackComponent />
-      <UseMemoComponent />
-      <UseRefComponent />
-      <UseContextComponent />
+      {/* <UseReducerComponent /> */}
+      {/* <UseCallbackComponent /> */}
+      {/* <UseMemoComponent /> */}
+      {/* <UseRefComponent /> */}
+      {/* <UseContextComponent /> */}
     </div>
   );
 };
