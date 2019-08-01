@@ -1,6 +1,6 @@
 # creact
 
-[![npm version](https://img.shields.io/npm/v/@caiym/react.svg?style=flat)](https://www.npmjs.com/package/@caiym/react) ![](https://badgen.net/bundlephobia/minzip/@caiym/react) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](README.md)
+[![npm version](https://img.shields.io/npm/v/@caiym/react.svg?style=flat)](https://www.npmjs.com/package/@caiym/react) [![codecov](https://codecov.io/gh/caiyongmin/creact/branch/master/graph/badge.svg)](https://codecov.io/gh/caiyongmin/creact) ![](https://badgen.net/bundlephobia/minzip/@caiym/react) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](README.md)
 
 [React](https://reactjs.org/) personal implementation version.
 
@@ -30,7 +30,7 @@ npm start
   - [x] support `useCallback` / `useMemo` / `useRef`.
   - [x] support `useContext`.
 - [x] Publish package.
-- [ ] Add unit test.
+- [x] Add unit test.
 - [ ] Clarify the code design and add necessary comments.
 
 ## Examples
