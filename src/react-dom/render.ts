@@ -10,6 +10,7 @@ import React from './../react/index';
 import { VNode, ReactHtmlElement, MountElement } from '../../typings/index';
 
 export function render(vdom: VNode, parent?: ReactHtmlElement | null, context?: any): ReactHtmlElement {
+  // TODO: consider removing the judgment logic, only the case of have parent
   const mount = parent ? (el: MountElement) => parent.appendChild(el) : (el: any) => el;
 
   // 渲染数字和字符串
@@ -61,10 +62,11 @@ export function render(vdom: VNode, parent?: ReactHtmlElement | null, context?: 
 
   // 渲染数组子节点
   if (Array.isArray(vdom)) {
+    // TODO: code do not running, fix it
     return vdom.map(item => render(item, parent, context)) as any;
   }
 
-  throw new Error(`unkown vdom type: ${String(vdom)}`);
+  throw new Error(`unkown vdom type: ${JSON.stringify(vdom)}`);
 }
 
 export function setAttribute(dom: ReactHtmlElement, key: string, value: any) {
@@ -94,6 +96,7 @@ export function setAttribute(dom: ReactHtmlElement, key: string, value: any) {
     }
   }
   else if (key === 'key') {
+    // TODO: need stringigy value
     dom.__key = value;
   }
   else if (key === 'style') {

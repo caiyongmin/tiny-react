@@ -12,7 +12,7 @@ export function diff(
   vdom: VNode,
   parent?: ReactHtmlElement | null,
 ): ReactHtmlElement {
-  // console.info('diff vdom', vdom);
+  // TODO: consider removing the judgment logic, only the case of have parent
   const replace = parent ? (el: MountElement) => {
     return parent.replaceChild(el, dom);
   } : ((el: any) => el);
@@ -56,6 +56,7 @@ export function diff(
     return instance._update(isUpdateState);
   }
 
+  // TODO: code do not running, fix it
   throw new Error(`unkown vdom type: ${String(vdom)}`);
 }
 

@@ -41,6 +41,7 @@ class Component<P = {}, S = {}> {
     this.__hooks = null;
     this.base = null;
     this.parentNode = null;
+    // TODO: no running code, delete it
     this.renderVDOM = () => ({ type: '', props: {}, children: [] });
     this._afterPaintQueued = false;
     this.context = context;
@@ -85,6 +86,7 @@ class Component<P = {}, S = {}> {
   }
 
   public _update(isUpdateState?: boolean, isForceUpdate?: boolean): null | ReactHtmlElement {
+    // TODO: no running code, delete it
     if (this.base === null) {
       return null;
     }

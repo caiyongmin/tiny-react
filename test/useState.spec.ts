@@ -13,7 +13,7 @@ describe('useState', () => {
     deleteRoot(root);
   });
 
-  it('should render correct DOM after set state value', () => {
+  it('should render correct DOM after set new state value', () => {
     ReactDOM.render(useStateVNode, root);
     const addButton = root.querySelector('#add') as HTMLButtonElement;
     const resetButton = root.querySelector('#reset') as HTMLButtonElement;
@@ -27,7 +27,7 @@ describe('useState', () => {
     expect(result.innerHTML).toBe('0');
   });
 
-  it('should not re-render when set the same state value', () => {
+  it('should not re-render when set same state value', () => {
     ReactDOM.render(SameStateValueVNode, root);
     const sameButton = root.querySelector('#same') as HTMLButtonElement;
     const date = root.querySelector('#date') as HTMLSpanElement;

@@ -9,10 +9,10 @@ export const useRefVNode = React.createElement(
     };
 
     return React.createElement(
-      "div",
+      'div',
       {},
-      React.createElement("input", { type: 'text', ref: inputEl }),
-      React.createElement("button", { id: 'focus', onClick: onButtonClick }, 'Focus the input'),
+      React.createElement('input', { type: 'text', ref: inputEl }),
+      React.createElement('button', { id: 'focus', onClick: onButtonClick }, 'Focus the input'),
     );
   }
 );

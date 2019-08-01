@@ -57,12 +57,15 @@ export class Hooks {
 
   public useContext(context: any) {
     const provider = this.currentInstance.context[context.ctxId];
+
+    // TODO: provider is always have value, so delete it?
     if (!provider) {
       return context._defaultValue;
     }
 
     const hookState = this.getHookState(this.currentIndex++);
     if (hookState.__value == null) {
+      // TODO: need assign more suitable value
       hookState.__value = [true, () => true];
       provider.sub(this.currentInstance);
     }

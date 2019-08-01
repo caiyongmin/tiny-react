@@ -23,6 +23,7 @@ const countReducer = (state: ReducerState, action: { type: string; [key: string]
       return { ...state, count: state.count - 1 };
     case ACTIONS.RESET:
       return { ...state, count: initialState.count };
+    // TODO: no running code, so delete it?
     default:
       return state;
   }
@@ -42,12 +43,12 @@ export const UseCallbackVNode = React.createElement(
     };
 
     return React.createElement(
-      "div",
+      'div',
       {},
-      React.createElement("span", { id: 'result' }, state.count),
-      React.createElement("button", { id: 'increase', onClick: handleIncrease }, 'increase'),
-      React.createElement("button", { id: 'decrease', onClick: handleDecrease }, 'decrease'),
-      React.createElement("button", { id: 'reset', onClick: handleReset }, 'reset'),
+      React.createElement('span', { id: 'result' }, state.count),
+      React.createElement('button', { id: 'increase', onClick: handleIncrease }, 'increase'),
+      React.createElement('button', { id: 'decrease', onClick: handleDecrease }, 'decrease'),
+      React.createElement('button', { id: 'reset', onClick: handleReset }, 'reset'),
     );
   }
 );

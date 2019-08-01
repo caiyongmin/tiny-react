@@ -40,6 +40,9 @@ export const UseContextVNode = React.createElement(
         CounterContext.Provider,
         { value: count },
         ContextChildVNode,
+        count === 0
+          ? ContextChildVNode
+          : React.createElement('div', {}, 'temp'),
         ContextMemoChildVNode,
         CommonChildVNode
       ),

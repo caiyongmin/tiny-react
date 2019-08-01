@@ -1,17 +1,10 @@
-import {
-  React,
-  ReactDOM,
-  useState,
-} from './../src';
-import { ComponentType, VNode } from './../typings';
-
 /**
  * 创建一个可渲染的节点
  */
 export function createRoot(): HTMLDivElement {
 	const root = document.createElement('div');
 	root.id = 'root';
-	(document.body || document.documentElement).appendChild(root);
+	document.body.appendChild(root);
 	return root;
 }
 
@@ -26,18 +19,6 @@ export function deleteRoot(root: HTMLDivElement) {
   ) {
 		root.parentNode.removeChild(root);
 	}
-}
-
-export function createVNode(
-  type: ComponentType,
-  props: null | { [key: string]: any; },
-  ...children: any[]
-) {
-  return {
-    type,
-    props,
-    children
-  }
 }
 
 export function createKeyboardEvent(
@@ -59,10 +40,10 @@ export function createKeyboardEvent(
   return e;
 }
 
-export function sleep(ms = 0, needReject = false) {
-  return new Promise(function (resolve, reject) {
+export function sleep(ms = 0) {
+  return new Promise(function (resolve) {
     setTimeout(function () {
-      needReject ? reject(ms) : resolve(ms);
+      resolve(ms);
     }, ms);
   });
 }

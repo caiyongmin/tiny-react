@@ -1,4 +1,4 @@
-import { createRoot, deleteRoot } from './utils';
+import { createRoot, deleteRoot, sleep } from './utils';
 import { ReactDOM } from '../src';
 import { UseContextVNode } from './fixtures/useContext';
 
@@ -13,14 +13,13 @@ describe('useContext', () => {
     deleteRoot(root);
   });
 
-  it('should get the correct context value', () => {
+  it('should get the correct context value', async () => {
     ReactDOM.render(UseContextVNode, root);
     const contextChilds = root.querySelectorAll('.context-child') as NodeListOf<HTMLDivElement>;
     const countButton = root.querySelector('#count') as HTMLButtonElement;
     expect(contextChilds[0].innerHTML).toBe('0');
-    // expect(contextChilds[1].innerHTML).toBe('0');
     countButton.click();
+    await sleep(50);
     expect(contextChilds[0].innerHTML).toBe('1');
-    // expect(contextChilds[1].innerHTML).toBe('1');
   });
 });

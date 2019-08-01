@@ -50,19 +50,25 @@ const TriggerComponent = class Trigger extends React.Component<{ count: number }
   render() {
     lifeCycleCall += 'render;';
     return React.createElement(
-      "div",
+      'div',
       {},
-      React.createElement("button", { id: 'num', onClick: this.handleAddNum }, "addNum"),
-      React.createElement("button", { id: 'force-update', onClick: () => this.forceUpdate() }, "forceUpdate"),
-      React.createElement("span", { id: 'date' }, +new Date()),
-      React.createElement("span", {}, this.props.count),
+      React.createElement('button', { id: 'num', onClick: this.handleAddNum }, 'addNum'),
+      React.createElement(
+        'button', {
+          id: 'force-update',
+          onClick: () => this.forceUpdate(() => { console.info('forceUpdate') })
+        },
+        'forceUpdate'
+      ),
+      React.createElement('span', { id: 'date' }, +new Date()),
+      React.createElement('span', {}, this.props.count),
     )
   }
 };
 
 // 父组件，内含类型为 classComponent 的子组件
 // 父组件主要用来为子组件提供需要的 props 参数
-const VNode = React.createElement(
+const vnode = React.createElement(
   class Demo extends React.Component<{}, { count: number, toggle: boolean }> {
     constructor(props: any) {
       super(props);
@@ -89,8 +95,8 @@ const VNode = React.createElement(
       return React.createElement(
         'div',
         {},
-        React.createElement("button", { id: 'add', onClick: this.handleAdd }, "addCount"),
-        React.createElement("button", { id: 'toggle', onClick: this.handleToggle }, "toggle"),
+        React.createElement('button', { id: 'add', onClick: this.handleAdd }, 'addCount'),
+        React.createElement('button', { id: 'toggle', onClick: this.handleToggle }, 'toggle'),
         this.state.toggle
         ? React.createElement('span', {}, String(this.state.toggle))
         : React.createElement(
@@ -126,7 +132,7 @@ describe('class component', () => {
     expect(result.innerHTML).toBe('0');
     addButton.click();
     await sleep(50);
-    expect(result.innerHTML).toBe("1");
+    expect(result.innerHTML).toBe('1');
   });
 
   it('should setState is defer', async () => {
@@ -153,11 +159,10 @@ describe('class component', () => {
     expect(result.innerHTML).toBe('0');
     await sleep(50);
     expect(result.innerHTML).toBe('3');
-    expect(0).toBe(0);
   });
 
   it('should call the correct life cycle function', async () => {
-    ReactDOM.render(VNode, root);
+    ReactDOM.render(vnode, root);
     const addButton = root.querySelector('#add') as HTMLButtonElement;
     const forceUpdateButton = root.querySelector('#force-update') as HTMLButtonElement;
     const toggleButton = root.querySelector('#toggle') as HTMLButtonElement;

@@ -3,6 +3,7 @@ draft
 dist
 .cache
 temp
+codecov.yml
 
 # Logs
 logs

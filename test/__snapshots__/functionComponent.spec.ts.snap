@@ -15,11 +15,6 @@ exports[`function component should render correct DOM 1`] = `
     >
       reset
     </button>
-    <button
-      id="same"
-    >
-      same
-    </button>
     <span
       id="result"
     >

@@ -38,6 +38,7 @@ export default function createContext<T>(defaultValue: T): Context<T> {
     provider.sub = (component: Component) => {
       subs.push(component);
       const _WillUnMount = component.componentWillUnmount;
+      // TODO: code do not running, fix it
       component.componentWillUnmount = () => {
         subs.slice(subs.indexOf(component), 1);
         if (isFunction(_WillUnMount)) {

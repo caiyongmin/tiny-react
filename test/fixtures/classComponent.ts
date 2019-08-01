@@ -18,6 +18,8 @@ export const DemoComponentVNode = React.createElement(
 
     handleStateUpdater = () => {
       this.setState((prevState) => {
+        // TODO: if not have this statement, unit test will throw a warning about "Object is possibly 'undefined'"
+        // need delete it later
         if (!prevState) {
           return { ...this.state };
         }
@@ -33,11 +35,11 @@ export const DemoComponentVNode = React.createElement(
       const { count } = this.state;
 
       return React.createElement(
-        "div",
+        'div',
         {},
-        React.createElement("button", { id: 'add', onClick: this.handleClick }, "addCount"),
-        React.createElement("button", { id: 'state-updater', onClick: this.handleStateUpdater }, "stateUpdater"),
-        React.createElement("span", { id: 'result' }, count),
+        React.createElement('button', { id: 'add', onClick: this.handleClick }, 'addCount'),
+        React.createElement('button', { id: 'state-updater', onClick: this.handleStateUpdater }, 'stateUpdater'),
+        React.createElement('span', { id: 'result' }, count),
       )
     }
   }

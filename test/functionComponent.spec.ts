@@ -24,6 +24,6 @@ describe('function component', () => {
     const result = root.querySelector('#result') as HTMLSpanElement;
     expect(result.innerHTML).toBe('0');
     addButton.click();
-    expect(result.innerHTML).toBe("1");
+    expect(result.innerHTML).toBe('1');
   });
 });

@@ -18,11 +18,11 @@ export const useCallbackVNode = React.createElement(
     const name = useInputValue('Jack');
 
     return React.createElement(
-      "div",
+      'div',
       {},
-      React.createElement("h3", {}, "useCallback"),
-      React.createElement("input", { type: 'text', ...name }),
-      React.createElement("div", { id: 'result' }, name.value),
+      React.createElement('h3', {}, 'useCallback'),
+      React.createElement('input', { type: 'text', ...name }),
+      React.createElement('div', { id: 'result' }, name.value),
     );
   }
 );
