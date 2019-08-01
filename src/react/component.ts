@@ -1,7 +1,8 @@
 import { Hooks, setDispatcher, invokeCleanup } from './hooks';
 import setState from './setState';
 import ReactDOM from '../react-dom/index';
-import { shallowCompareObject, isFunction } from './../react-dom/utils';
+import { isFunction } from './../shared/is';
+import { shallowCompareObject } from './../shared/shallowCompare';
 import {
   ReactHtmlElement,
   ComponentProps,

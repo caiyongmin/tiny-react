@@ -4,7 +4,7 @@ import {
   isSameNodeType,
   isString,
   isFunction
-} from './utils';
+} from './../shared/is';
 import { VNode, ReactHtmlElement, ReactElement, MountElement } from '../../typings/index';
 
 export function diff(

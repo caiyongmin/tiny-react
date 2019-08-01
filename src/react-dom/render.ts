@@ -5,7 +5,7 @@ import {
   isString,
   isObject,
   isClass,
-} from './utils';
+} from './../shared/is';
 import React from './../react/index';
 import { VNode, ReactHtmlElement, MountElement } from '../../typings/index';
 

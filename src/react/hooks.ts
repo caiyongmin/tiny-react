@@ -1,6 +1,6 @@
 import Component from './component';
 import ReactDOM from './../react-dom/index';
-import { isFunction } from "./../react-dom/utils";
+import { isFunction } from "./../shared/is";
 import { HookState, HookStateValue } from '../../typings/index';
 
 let dispatcher: Hooks;

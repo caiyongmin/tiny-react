@@ -1,6 +1,5 @@
 import Component from "./component";
-import { isFunction } from "../react-dom/utils";
-import { ReactDOM } from "index";
+import { isFunction } from "./../shared/is";
 
 let id: number = -1;
 

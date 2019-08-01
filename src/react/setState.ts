@@ -1,4 +1,4 @@
-import { isFunction } from "./../react-dom/utils";
+import { isFunction } from "./../shared/is";
 import Component from "./component";
 import { ComponentProps, ComponentState } from '../../typings/index';
 
